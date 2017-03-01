@@ -31,6 +31,20 @@ var recIndex = 0;
 - "Monitor input" switch
 */
 
+
+function upload(blob) {
+  var xhr=new XMLHttpRequest();
+  xhr.onload=function(e) {
+      if(this.readyState === 4) {
+          console.log("Server returned: ",e.target.responseText);
+      }
+  };
+  var fd=new FormData();
+  fd.append("test.wav",blob);
+  xhr.open("POST","upload.php",true);
+  xhr.send(fd);
+}
+
 function saveAudio() {
     audioRecorder.exportWAV( doneEncoding );
     // could get mono instead by saying
@@ -46,7 +60,7 @@ function gotBuffers( buffers ) {
 }
 
 function doneEncoding( blob ) {
-    Recorder.setupDownload( blob, "myRecording" + ((recIndex<10)?"0":"") + recIndex + ".wav" );
+    //Recorder.setupDownload( blob, "myRecording" + ((recIndex<10)?"0":"") + recIndex + ".wav" );
     recIndex++;
 }
 
@@ -92,6 +106,7 @@ function startrecording(e){
 
         audioRecorder.stop();
         audioRecorder.getBuffers( gotBuffers );
+        upload();
         }
 
         else if (e.classList.contains("fa-circle-o-notch")){
